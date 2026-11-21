@@ -1,0 +1,1477 @@
+{
+  "apiVersion": "dashboard.grafana.app/v2",
+  "kind": "Dashboard",
+  "metadata": {
+    "name": "market-overview",
+    "generation": 5,
+    "creationTimestamp": "2026-11-20T20:28:01Z",
+    "labels": {},
+    "annotations": {}
+  },
+  "spec": {
+    "annotations": [
+      {
+        "kind": "AnnotationQuery",
+        "spec": {
+          "query": {
+            "kind": "DataQuery",
+            "group": "grafana",
+            "version": "v0",
+            "spec": {},
+            "labels": {
+              "grafana.app/export-label": "grafana-1"
+            }
+          },
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations & Alerts",
+          "builtIn": true
+        }
+      }
+    ],
+    "cursorSync": "Off",
+    "editable": true,
+    "elements": {
+      "panel-1": {
+        "kind": "Panel",
+        "spec": {
+          "id": 1,
+          "title": "Total Listings",
+          "description": "Источник: public.apartments_analysis",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "grafana-postgresql-datasource",
+                      "version": "v0",
+                      "spec": {
+                        "dataset": "avito_real_estate",
+                        "editorMode": "code",
+                        "format": "table",
+                        "rawQuery": true,
+                        "rawSql": "SELECT COUNT(*) AS total_listings\r\nFROM public.apartments_analysis\r\nWHERE\r\n    COALESCE(district, '') ~ '${district:regex}'\r\n    AND COALESCE(rooms_group, '') ~ '${rooms:regex}'\r\n    AND COALESCE(renovation, '') ~ '${renovation:regex}'\r\n    AND COALESCE(floor_category, '') ~ '${floor_category:regex}'\r\n    AND (\r\n        COALESCE(metro_1, '') ~ '${metro:regex}'\r\n        OR COALESCE(metro_2, '') ~ '${metro:regex}'\r\n        OR COALESCE(metro_3, '') ~ '${metro:regex}'\r\n    );",
+                        "sql": {
+                          "columns": [
+                            {
+                              "parameters": [],
+                              "type": "function"
+                            }
+                          ],
+                          "groupBy": [
+                            {
+                              "property": {
+                                "type": "string"
+                              },
+                              "type": "groupBy"
+                            }
+                          ],
+                          "limit": 50
+                        }
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "grafana-postgresql-datasource-1",
+                        "grafana.app/export-datasource-name": "grafana-postgresql-datasource"
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "stat",
+            "version": "13.3.1",
+            "spec": {
+              "options": {
+                "colorMode": "value",
+                "graphMode": "area",
+                "justifyMode": "center",
+                "orientation": "auto",
+                "percentChangeColorMode": "standard",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "showPercentChange": false,
+                "textMode": "auto",
+                "wideLayout": true
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "short",
+                  "decimals": 0,
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": 0,
+                        "color": "green"
+                      }
+                    ]
+                  },
+                  "color": {
+                    "mode": "palette-classic"
+                  }
+                },
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-2": {
+        "kind": "Panel",
+        "spec": {
+          "id": 2,
+          "title": "Median Price",
+          "description": "Источник: public.apartments_analysis",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "grafana-postgresql-datasource",
+                      "version": "v0",
+                      "spec": {
+                        "dataset": "avito_real_estate",
+                        "editorMode": "code",
+                        "format": "table",
+                        "rawQuery": true,
+                        "rawSql": "SELECT ROUND(\r\n    PERCENTILE_CONT(0.5)\r\n    WITHIN GROUP (ORDER BY price_rub)\r\n) AS median_price\r\nFROM public.apartments_analysis\r\nWHERE price_rub > 0\r\n    AND COALESCE(district, '') ~ '${district:regex}'\r\n    AND COALESCE(rooms_group, '') ~ '${rooms:regex}'\r\n    AND COALESCE(renovation, '') ~ '${renovation:regex}'\r\n    AND COALESCE(floor_category, '') ~ '${floor_category:regex}'\r\n    AND (\r\n        COALESCE(metro_1, '') ~ '${metro:regex}'\r\n        OR COALESCE(metro_2, '') ~ '${metro:regex}'\r\n        OR COALESCE(metro_3, '') ~ '${metro:regex}'\r\n    );",
+                        "sql": {
+                          "columns": [
+                            {
+                              "parameters": [],
+                              "type": "function"
+                            }
+                          ],
+                          "groupBy": [
+                            {
+                              "property": {
+                                "type": "string"
+                              },
+                              "type": "groupBy"
+                            }
+                          ],
+                          "limit": 50
+                        }
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "grafana-postgresql-datasource-1",
+                        "grafana.app/export-datasource-name": "grafana-postgresql-datasource"
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "stat",
+            "version": "13.3.1",
+            "spec": {
+              "options": {
+                "colorMode": "value",
+                "graphMode": "area",
+                "justifyMode": "center",
+                "orientation": "auto",
+                "percentChangeColorMode": "standard",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "showPercentChange": false,
+                "textMode": "auto",
+                "wideLayout": true
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "currencyRUB",
+                  "decimals": 0,
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": 0,
+                        "color": "green"
+                      }
+                    ]
+                  },
+                  "color": {
+                    "mode": "palette-classic"
+                  }
+                },
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-3": {
+        "kind": "Panel",
+        "spec": {
+          "id": 3,
+          "title": "Average Price",
+          "description": "Источник: public.apartments_analysis",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "grafana-postgresql-datasource",
+                      "version": "v0",
+                      "spec": {
+                        "dataset": "avito_real_estate",
+                        "editorMode": "code",
+                        "format": "table",
+                        "rawQuery": true,
+                        "rawSql": "SELECT ROUND(AVG(price_rub)) AS average_price\r\nFROM public.apartments_analysis\r\nWHERE price_rub > 0\r\n    AND COALESCE(district, '') ~ '${district:regex}'\r\n    AND COALESCE(rooms_group, '') ~ '${rooms:regex}'\r\n    AND COALESCE(renovation, '') ~ '${renovation:regex}'\r\n    AND COALESCE(floor_category, '') ~ '${floor_category:regex}'\r\n    AND (\r\n        COALESCE(metro_1, '') ~ '${metro:regex}'\r\n        OR COALESCE(metro_2, '') ~ '${metro:regex}'\r\n        OR COALESCE(metro_3, '') ~ '${metro:regex}'\r\n    );",
+                        "sql": {
+                          "columns": [
+                            {
+                              "parameters": [],
+                              "type": "function"
+                            }
+                          ],
+                          "groupBy": [
+                            {
+                              "property": {
+                                "type": "string"
+                              },
+                              "type": "groupBy"
+                            }
+                          ],
+                          "limit": 50
+                        }
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "grafana-postgresql-datasource-1",
+                        "grafana.app/export-datasource-name": "grafana-postgresql-datasource"
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "stat",
+            "version": "13.3.1",
+            "spec": {
+              "options": {
+                "colorMode": "value",
+                "graphMode": "area",
+                "justifyMode": "center",
+                "orientation": "auto",
+                "percentChangeColorMode": "standard",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "showPercentChange": false,
+                "textMode": "auto",
+                "wideLayout": true
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "currencyRUB",
+                  "decimals": 0,
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": 0,
+                        "color": "green"
+                      }
+                    ]
+                  },
+                  "color": {
+                    "mode": "palette-classic"
+                  }
+                },
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-4": {
+        "kind": "Panel",
+        "spec": {
+          "id": 4,
+          "title": "Median Price per m²",
+          "description": "Источник: public.apartments_analysis",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "grafana-postgresql-datasource",
+                      "version": "v0",
+                      "spec": {
+                        "dataset": "avito_real_estate",
+                        "editorMode": "code",
+                        "format": "table",
+                        "rawQuery": true,
+                        "rawSql": "SELECT ROUND(\r\n    PERCENTILE_CONT(0.5)\r\n    WITHIN GROUP (ORDER BY price_per_sqm)\r\n) AS median_price_per_sqm\r\nFROM public.apartments_analysis\r\nWHERE price_per_sqm > 0\r\n    AND COALESCE(district, '') ~ '${district:regex}'\r\n    AND COALESCE(rooms_group, '') ~ '${rooms:regex}'\r\n    AND COALESCE(renovation, '') ~ '${renovation:regex}'\r\n    AND COALESCE(floor_category, '') ~ '${floor_category:regex}'\r\n    AND (\r\n        COALESCE(metro_1, '') ~ '${metro:regex}'\r\n        OR COALESCE(metro_2, '') ~ '${metro:regex}'\r\n        OR COALESCE(metro_3, '') ~ '${metro:regex}'\r\n    );",
+                        "sql": {
+                          "columns": [
+                            {
+                              "parameters": [],
+                              "type": "function"
+                            }
+                          ],
+                          "groupBy": [
+                            {
+                              "property": {
+                                "type": "string"
+                              },
+                              "type": "groupBy"
+                            }
+                          ],
+                          "limit": 50
+                        }
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "grafana-postgresql-datasource-1",
+                        "grafana.app/export-datasource-name": "grafana-postgresql-datasource"
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "stat",
+            "version": "13.3.1",
+            "spec": {
+              "options": {
+                "colorMode": "value",
+                "graphMode": "area",
+                "justifyMode": "center",
+                "orientation": "auto",
+                "percentChangeColorMode": "standard",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "showPercentChange": false,
+                "textMode": "auto",
+                "wideLayout": true
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "currencyRUB",
+                  "decimals": 0,
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": 0,
+                        "color": "green"
+                      }
+                    ]
+                  },
+                  "color": {
+                    "mode": "palette-classic"
+                  }
+                },
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-5": {
+        "kind": "Panel",
+        "spec": {
+          "id": 5,
+          "title": "Median Area",
+          "description": "Источник: public.apartments_analysis",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "grafana-postgresql-datasource",
+                      "version": "v0",
+                      "spec": {
+                        "dataset": "avito_real_estate",
+                        "editorMode": "code",
+                        "format": "table",
+                        "rawQuery": true,
+                        "rawSql": "SELECT ROUND(\r\n    PERCENTILE_CONT(0.5)\r\n    WITHIN GROUP (ORDER BY total_area_sqm)::numeric,\r\n    1\r\n) AS median_area\r\nFROM public.apartments_analysis\r\nWHERE total_area_sqm > 0\r\n    AND COALESCE(district, '') ~ '${district:regex}'\r\n    AND COALESCE(rooms_group, '') ~ '${rooms:regex}'\r\n    AND COALESCE(renovation, '') ~ '${renovation:regex}'\r\n    AND COALESCE(floor_category, '') ~ '${floor_category:regex}'\r\n    AND (\r\n        COALESCE(metro_1, '') ~ '${metro:regex}'\r\n        OR COALESCE(metro_2, '') ~ '${metro:regex}'\r\n        OR COALESCE(metro_3, '') ~ '${metro:regex}'\r\n    );",
+                        "sql": {
+                          "columns": [
+                            {
+                              "parameters": [],
+                              "type": "function"
+                            }
+                          ],
+                          "groupBy": [
+                            {
+                              "property": {
+                                "type": "string"
+                              },
+                              "type": "groupBy"
+                            }
+                          ],
+                          "limit": 50
+                        }
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "grafana-postgresql-datasource-1",
+                        "grafana.app/export-datasource-name": "grafana-postgresql-datasource"
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "stat",
+            "version": "13.3.1",
+            "spec": {
+              "options": {
+                "colorMode": "value",
+                "graphMode": "area",
+                "justifyMode": "center",
+                "orientation": "auto",
+                "percentChangeColorMode": "standard",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "showPercentChange": false,
+                "textMode": "auto",
+                "wideLayout": true
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "suffix:m²",
+                  "decimals": 1,
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": 0,
+                        "color": "green"
+                      }
+                    ]
+                  },
+                  "color": {
+                    "mode": "palette-classic"
+                  }
+                },
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-6": {
+        "kind": "Panel",
+        "spec": {
+          "id": 6,
+          "title": "Listings by District — Top 10",
+          "description": "Количество объявлений в десяти районах с наибольшим числом записей.",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "grafana-postgresql-datasource",
+                      "version": "v0",
+                      "spec": {
+                        "dataset": "avito_real_estate",
+                        "editorMode": "code",
+                        "format": "table",
+                        "rawQuery": true,
+                        "rawSql": "SELECT\r\n    district,\r\n    COUNT(*) AS listings\r\nFROM public.apartments_analysis\r\nWHERE\r\n    district IS NOT NULL\r\n    AND COALESCE(district, '') ~ '${district:regex}'\r\n    AND COALESCE(rooms_group, '') ~ '${rooms:regex}'\r\n    AND COALESCE(renovation, '') ~ '${renovation:regex}'\r\n    AND COALESCE(floor_category, '') ~ '${floor_category:regex}'\r\n    AND (\r\n        COALESCE(metro_1, '') ~ '${metro:regex}'\r\n        OR COALESCE(metro_2, '') ~ '${metro:regex}'\r\n        OR COALESCE(metro_3, '') ~ '${metro:regex}'\r\n    )\r\nGROUP BY district\r\nORDER BY listings DESC\r\nLIMIT 10;",
+                        "sql": {
+                          "columns": [
+                            {
+                              "parameters": [],
+                              "type": "function"
+                            }
+                          ],
+                          "groupBy": [
+                            {
+                              "property": {
+                                "type": "string"
+                              },
+                              "type": "groupBy"
+                            }
+                          ],
+                          "limit": 50
+                        }
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "grafana-postgresql-datasource-1",
+                        "grafana.app/export-datasource-name": "grafana-postgresql-datasource"
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "barchart",
+            "version": "13.3.1",
+            "spec": {
+              "options": {
+                "barRadius": 0,
+                "barWidth": 0.8,
+                "fullHighlight": false,
+                "groupWidth": 0.7,
+                "legend": {
+                  "calcs": [],
+                  "displayMode": "list",
+                  "placement": "bottom",
+                  "showLegend": false
+                },
+                "orientation": "horizontal",
+                "showValue": "auto",
+                "stacking": "none",
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "single",
+                  "sort": "none"
+                },
+                "xField": "district",
+                "xTickLabelRotation": 0,
+                "xTickLabelSpacing": 0
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": 0,
+                        "color": "green"
+                      }
+                    ]
+                  },
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "Объявления",
+                    "axisPlacement": "auto",
+                    "fillOpacity": 80,
+                    "gradientMode": "none",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "lineWidth": 1,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
+                  }
+                },
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-7": {
+        "kind": "Panel",
+        "spec": {
+          "id": 7,
+          "title": "Median Price per m² by District — Top 10",
+          "description": "Районы с наибольшей медианной стоимостью квадратного метра.",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "grafana-postgresql-datasource",
+                      "version": "v0",
+                      "spec": {
+                        "dataset": "avito_real_estate",
+                        "editorMode": "code",
+                        "format": "table",
+                        "rawQuery": true,
+                        "rawSql": "SELECT\r\n    district,\r\n    ROUND(\r\n        PERCENTILE_CONT(0.5)\r\n        WITHIN GROUP (ORDER BY price_per_sqm)\r\n    ) AS median_price_per_sqm\r\nFROM public.apartments_analysis\r\nWHERE\r\n    price_per_sqm > 0\r\n    AND COALESCE(district, '') ~ '${district:regex}'\r\n    AND COALESCE(rooms_group, '') ~ '${rooms:regex}'\r\n    AND COALESCE(renovation, '') ~ '${renovation:regex}'\r\n    AND COALESCE(floor_category, '') ~ '${floor_category:regex}'\r\n    AND (\r\n        COALESCE(metro_1, '') ~ '${metro:regex}'\r\n        OR COALESCE(metro_2, '') ~ '${metro:regex}'\r\n        OR COALESCE(metro_3, '') ~ '${metro:regex}'\r\n    )\r\nGROUP BY district\r\nORDER BY median_price_per_sqm DESC\r\nLIMIT 10;",
+                        "sql": {
+                          "columns": [
+                            {
+                              "parameters": [],
+                              "type": "function"
+                            }
+                          ],
+                          "groupBy": [
+                            {
+                              "property": {
+                                "type": "string"
+                              },
+                              "type": "groupBy"
+                            }
+                          ],
+                          "limit": 50
+                        }
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "grafana-postgresql-datasource-1",
+                        "grafana.app/export-datasource-name": "grafana-postgresql-datasource"
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "barchart",
+            "version": "13.3.1",
+            "spec": {
+              "options": {
+                "barRadius": 0,
+                "barWidth": 0.8,
+                "fullHighlight": false,
+                "groupWidth": 0.7,
+                "legend": {
+                  "calcs": [],
+                  "displayMode": "list",
+                  "placement": "bottom",
+                  "showLegend": false
+                },
+                "orientation": "horizontal",
+                "showValue": "auto",
+                "stacking": "none",
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "single",
+                  "sort": "none"
+                },
+                "xField": "district",
+                "xTickLabelRotation": 0,
+                "xTickLabelSpacing": 0
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": 0,
+                        "color": "green"
+                      }
+                    ]
+                  },
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "₽/м²",
+                    "axisPlacement": "auto",
+                    "fillOpacity": 80,
+                    "gradientMode": "none",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "lineWidth": 1,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
+                  }
+                },
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-8": {
+        "kind": "Panel",
+        "spec": {
+          "id": 8,
+          "title": "Price Distribution",
+          "description": "Количество объявлений по ценовым диапазонам.",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "grafana-postgresql-datasource",
+                      "version": "v0",
+                      "spec": {
+                        "dataset": "avito_real_estate",
+                        "editorMode": "code",
+                        "format": "table",
+                        "rawQuery": true,
+                        "rawSql": "SELECT\r\n    price_range,\r\n    COUNT(*) AS listings\r\nFROM (\r\n    SELECT\r\n        CASE\r\n            WHEN price_rub < 5000000 THEN 'До 5 млн ₽'\r\n            WHEN price_rub < 10000000 THEN '5–10 млн ₽'\r\n            WHEN price_rub < 15000000 THEN '10–15 млн ₽'\r\n            WHEN price_rub < 25000000 THEN '15–25 млн ₽'\r\n            ELSE 'От 25 млн ₽'\r\n        END AS price_range,\r\n        CASE\r\n            WHEN price_rub < 5000000 THEN 1\r\n            WHEN price_rub < 10000000 THEN 2\r\n            WHEN price_rub < 15000000 THEN 3\r\n            WHEN price_rub < 25000000 THEN 4\r\n            ELSE 5\r\n        END AS sort_order\r\n    FROM public.apartments_analysis\r\n    WHERE price_rub > 0\r\n        AND COALESCE(district, '') ~ '${district:regex}'\r\n        AND COALESCE(rooms_group, '') ~ '${rooms:regex}'\r\n        AND COALESCE(renovation, '') ~ '${renovation:regex}'\r\n        AND COALESCE(floor_category, '') ~ '${floor_category:regex}'\r\n        AND (\r\n            COALESCE(metro_1, '') ~ '${metro:regex}'\r\n            OR COALESCE(metro_2, '') ~ '${metro:regex}'\r\n            OR COALESCE(metro_3, '') ~ '${metro:regex}'\r\n        )\r\n) p\r\nGROUP BY price_range, sort_order\r\nORDER BY sort_order;",
+                        "sql": {
+                          "columns": [
+                            {
+                              "parameters": [],
+                              "type": "function"
+                            }
+                          ],
+                          "groupBy": [
+                            {
+                              "property": {
+                                "type": "string"
+                              },
+                              "type": "groupBy"
+                            }
+                          ],
+                          "limit": 50
+                        }
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "grafana-postgresql-datasource-1",
+                        "grafana.app/export-datasource-name": "grafana-postgresql-datasource"
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "barchart",
+            "version": "13.3.1",
+            "spec": {
+              "options": {
+                "barRadius": 0,
+                "barWidth": 0.8,
+                "fullHighlight": false,
+                "groupWidth": 0.7,
+                "legend": {
+                  "calcs": [],
+                  "displayMode": "list",
+                  "placement": "bottom",
+                  "showLegend": false
+                },
+                "orientation": "vertical",
+                "showValue": "auto",
+                "stacking": "none",
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "single",
+                  "sort": "none"
+                },
+                "xField": "price_range",
+                "xTickLabelRotation": 0,
+                "xTickLabelSpacing": 0
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": 0,
+                        "color": "green"
+                      }
+                    ]
+                  },
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "Количество объявлений",
+                    "axisPlacement": "auto",
+                    "fillOpacity": 80,
+                    "gradientMode": "none",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "lineWidth": 1,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
+                  }
+                },
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-9": {
+        "kind": "Panel",
+        "spec": {
+          "id": 9,
+          "title": "District Summary",
+          "description": "Сводная таблица по районам: количество объявлений, медианная цена и медианная цена за м².",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "grafana-postgresql-datasource",
+                      "version": "v0",
+                      "spec": {
+                        "dataset": "avito_real_estate",
+                        "editorMode": "code",
+                        "format": "table",
+                        "rawQuery": true,
+                        "rawSql": "SELECT\r\n    district,\r\n    COUNT(*) AS listings,\r\n    ROUND(\r\n        PERCENTILE_CONT(0.5)\r\n        WITHIN GROUP (ORDER BY price_rub)\r\n    ) AS median_price_rub,\r\n    ROUND(\r\n        PERCENTILE_CONT(0.5)\r\n        WITHIN GROUP (ORDER BY price_per_sqm)\r\n    ) AS median_price_per_sqm\r\nFROM public.apartments_analysis\r\nWHERE\r\n    district IS NOT NULL\r\n    AND price_rub > 0\r\n    AND price_per_sqm > 0\r\n    AND COALESCE(district, '') ~ '${district:regex}'\r\n    AND COALESCE(rooms_group, '') ~ '${rooms:regex}'\r\n    AND COALESCE(renovation, '') ~ '${renovation:regex}'\r\n    AND COALESCE(floor_category, '') ~ '${floor_category:regex}'\r\n    AND (\r\n        COALESCE(metro_1, '') ~ '${metro:regex}'\r\n        OR COALESCE(metro_2, '') ~ '${metro:regex}'\r\n        OR COALESCE(metro_3, '') ~ '${metro:regex}'\r\n    )\r\nGROUP BY district\r\nORDER BY listings DESC;",
+                        "sql": {
+                          "columns": [
+                            {
+                              "parameters": [],
+                              "type": "function"
+                            }
+                          ],
+                          "groupBy": [
+                            {
+                              "property": {
+                                "type": "string"
+                              },
+                              "type": "groupBy"
+                            }
+                          ],
+                          "limit": 50
+                        }
+                      },
+                      "labels": {
+                        "grafana.app/export-label": "grafana-postgresql-datasource-1",
+                        "grafana.app/export-datasource-name": "grafana-postgresql-datasource"
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "table",
+            "version": "13.3.1",
+            "spec": {
+              "options": {
+                "cellHeight": "sm",
+                "showHeader": true,
+                "zebraStriping": false
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": 0,
+                        "color": "green"
+                      }
+                    ]
+                  },
+                  "custom": {
+                    "align": "auto",
+                    "cellOptions": {
+                      "type": "auto"
+                    },
+                    "footer": {
+                      "reducers": []
+                    },
+                    "inspect": false
+                  }
+                },
+                "overrides": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "layout": {
+      "kind": "GridLayout",
+      "spec": {
+        "items": [
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "x": 0,
+              "y": 0,
+              "width": 5,
+              "height": 4,
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-1"
+              }
+            }
+          },
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "x": 5,
+              "y": 0,
+              "width": 5,
+              "height": 4,
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-2"
+              }
+            }
+          },
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "x": 10,
+              "y": 0,
+              "width": 5,
+              "height": 4,
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-3"
+              }
+            }
+          },
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "x": 15,
+              "y": 0,
+              "width": 5,
+              "height": 4,
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-4"
+              }
+            }
+          },
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "x": 20,
+              "y": 0,
+              "width": 4,
+              "height": 4,
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-5"
+              }
+            }
+          },
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "x": 0,
+              "y": 4,
+              "width": 12,
+              "height": 9,
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-6"
+              }
+            }
+          },
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "x": 12,
+              "y": 4,
+              "width": 12,
+              "height": 9,
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-8"
+              }
+            }
+          },
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "x": 0,
+              "y": 13,
+              "width": 10,
+              "height": 10,
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-7"
+              }
+            }
+          },
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
+              "x": 10,
+              "y": 13,
+              "width": 14,
+              "height": 10,
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-9"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "links": [
+      {
+        "title": "Location & Infrastructure",
+        "type": "dashboards",
+        "icon": "external link",
+        "tooltip": "",
+        "url": "",
+        "tags": [
+          "real-estate"
+        ],
+        "asDropdown": true,
+        "targetBlank": false,
+        "includeVars": false,
+        "keepTime": false
+      }
+    ],
+    "liveNow": false,
+    "preload": false,
+    "tags": [
+      "real-estate",
+      "market-analysis",
+      "postgresql"
+    ],
+    "timeSettings": {
+      "timezone": "browser",
+      "from": "now-30d",
+      "to": "now",
+      "autoRefresh": "5m",
+      "autoRefreshIntervals": [
+        "5m",
+        "15m",
+        "30m",
+        "1h"
+      ],
+      "hideTimepicker": false,
+      "fiscalYearStartMonth": 0
+    },
+    "title": "Market Overview",
+    "variables": [
+      {
+        "kind": "QueryVariable",
+        "spec": {
+          "name": "district",
+          "current": {
+            "text": "",
+            "value": ""
+          },
+          "label": "district",
+          "hide": "dontHide",
+          "refresh": "onDashboardLoad",
+          "skipUrlSync": false,
+          "query": {
+            "kind": "DataQuery",
+            "group": "grafana-postgresql-datasource",
+            "version": "v0",
+            "spec": {
+              "dataset": "avito_real_estate",
+              "editorMode": "code",
+              "format": "table",
+              "query": "SELECT DISTINCT district\r\nFROM public.apartments_analysis\r\nWHERE district IS NOT NULL\r\nORDER BY district;",
+              "rawQuery": true,
+              "rawSql": "SELECT DISTINCT district\r\nFROM public.apartments_analysis\r\nWHERE district IS NOT NULL\r\nORDER BY district;",
+              "refId": "SQLVariableQueryEditor-VariableQuery",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              }
+            },
+            "labels": {
+              "grafana.app/export-label": "grafana-postgresql-datasource-1",
+              "grafana.app/export-datasource-name": "grafana-postgresql-datasource"
+            }
+          },
+          "regex": "",
+          "regexApplyTo": "value",
+          "sort": "disabled",
+          "definition": "SELECT DISTINCT district\r\nFROM public.apartments_analysis\r\nWHERE district IS NOT NULL\r\nORDER BY district;",
+          "options": [],
+          "multi": true,
+          "includeAll": true,
+          "allValue": ".*",
+          "allowCustomValue": true
+        }
+      },
+      {
+        "kind": "QueryVariable",
+        "spec": {
+          "name": "rooms",
+          "current": {
+            "text": "",
+            "value": ""
+          },
+          "label": "rooms",
+          "hide": "dontHide",
+          "refresh": "onDashboardLoad",
+          "skipUrlSync": false,
+          "query": {
+            "kind": "DataQuery",
+            "group": "grafana-postgresql-datasource",
+            "version": "v0",
+            "spec": {
+              "dataset": "avito_real_estate",
+              "editorMode": "code",
+              "format": "table",
+              "query": "SELECT DISTINCT\r\n    rooms_group AS __text,\r\n    rooms_group AS __value\r\nFROM public.apartments_analysis\r\nWHERE rooms_group IS NOT NULL\r\nORDER BY 1;",
+              "rawQuery": true,
+              "rawSql": "SELECT DISTINCT\r\n    rooms_group AS __text,\r\n    rooms_group AS __value\r\nFROM public.apartments_analysis\r\nWHERE rooms_group IS NOT NULL\r\nORDER BY 1;",
+              "refId": "SQLVariableQueryEditor-VariableQuery",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              }
+            },
+            "labels": {
+              "grafana.app/export-label": "grafana-postgresql-datasource-1",
+              "grafana.app/export-datasource-name": "grafana-postgresql-datasource"
+            }
+          },
+          "regex": "",
+          "regexApplyTo": "value",
+          "sort": "disabled",
+          "definition": "SELECT DISTINCT\r\n    rooms_group AS __text,\r\n    rooms_group AS __value\r\nFROM public.apartments_analysis\r\nWHERE rooms_group IS NOT NULL\r\nORDER BY 1;",
+          "options": [],
+          "multi": true,
+          "includeAll": true,
+          "allValue": ".*",
+          "allowCustomValue": true
+        }
+      },
+      {
+        "kind": "QueryVariable",
+        "spec": {
+          "name": "renovation",
+          "current": {
+            "text": "",
+            "value": ""
+          },
+          "label": "renovation",
+          "hide": "dontHide",
+          "refresh": "onDashboardLoad",
+          "skipUrlSync": false,
+          "query": {
+            "kind": "DataQuery",
+            "group": "grafana-postgresql-datasource",
+            "version": "v0",
+            "spec": {
+              "dataset": "avito_real_estate",
+              "editorMode": "code",
+              "format": "table",
+              "query": "SELECT DISTINCT\r\n    renovation AS __text,\r\n    renovation AS __value\r\nFROM public.apartments_analysis\r\nWHERE renovation IS NOT NULL\r\n  AND BTRIM(renovation) <> ''\r\nORDER BY 1;",
+              "rawQuery": true,
+              "rawSql": "SELECT DISTINCT\r\n    renovation AS __text,\r\n    renovation AS __value\r\nFROM public.apartments_analysis\r\nWHERE renovation IS NOT NULL\r\n  AND BTRIM(renovation) <> ''\r\nORDER BY 1;",
+              "refId": "SQLVariableQueryEditor-VariableQuery",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              }
+            },
+            "labels": {
+              "grafana.app/export-label": "grafana-postgresql-datasource-1",
+              "grafana.app/export-datasource-name": "grafana-postgresql-datasource"
+            }
+          },
+          "regex": "",
+          "regexApplyTo": "value",
+          "sort": "disabled",
+          "definition": "SELECT DISTINCT\r\n    renovation AS __text,\r\n    renovation AS __value\r\nFROM public.apartments_analysis\r\nWHERE renovation IS NOT NULL\r\n  AND BTRIM(renovation) <> ''\r\nORDER BY 1;",
+          "options": [],
+          "multi": true,
+          "includeAll": true,
+          "allValue": ".*",
+          "allowCustomValue": true
+        }
+      },
+      {
+        "kind": "QueryVariable",
+        "spec": {
+          "name": "floor_category",
+          "current": {
+            "text": "",
+            "value": ""
+          },
+          "label": "floor category",
+          "hide": "dontHide",
+          "refresh": "onDashboardLoad",
+          "skipUrlSync": false,
+          "query": {
+            "kind": "DataQuery",
+            "group": "grafana-postgresql-datasource",
+            "version": "v0",
+            "spec": {
+              "dataset": "avito_real_estate",
+              "editorMode": "code",
+              "format": "table",
+              "query": "SELECT DISTINCT\r\n    floor_category AS __text,\r\n    floor_category AS __value\r\nFROM public.apartments_analysis\r\nWHERE floor_category IS NOT NULL\r\n  AND BTRIM(floor_category) <> ''\r\nORDER BY 1;",
+              "rawQuery": true,
+              "rawSql": "SELECT DISTINCT\r\n    floor_category AS __text,\r\n    floor_category AS __value\r\nFROM public.apartments_analysis\r\nWHERE floor_category IS NOT NULL\r\n  AND BTRIM(floor_category) <> ''\r\nORDER BY 1;",
+              "refId": "SQLVariableQueryEditor-VariableQuery",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              }
+            },
+            "labels": {
+              "grafana.app/export-label": "grafana-postgresql-datasource-1",
+              "grafana.app/export-datasource-name": "grafana-postgresql-datasource"
+            }
+          },
+          "regex": "",
+          "regexApplyTo": "value",
+          "sort": "disabled",
+          "definition": "SELECT DISTINCT\r\n    floor_category AS __text,\r\n    floor_category AS __value\r\nFROM public.apartments_analysis\r\nWHERE floor_category IS NOT NULL\r\n  AND BTRIM(floor_category) <> ''\r\nORDER BY 1;",
+          "options": [],
+          "multi": true,
+          "includeAll": true,
+          "allValue": ".*",
+          "allowCustomValue": true
+        }
+      },
+      {
+        "kind": "QueryVariable",
+        "spec": {
+          "name": "metro",
+          "current": {
+            "text": "",
+            "value": ""
+          },
+          "label": "metro",
+          "hide": "dontHide",
+          "refresh": "onDashboardLoad",
+          "skipUrlSync": false,
+          "query": {
+            "kind": "DataQuery",
+            "group": "grafana-postgresql-datasource",
+            "version": "v0",
+            "spec": {
+              "dataset": "avito_real_estate",
+              "editorMode": "code",
+              "format": "table",
+              "query": "SELECT DISTINCT\r\n    metro AS __text,\r\n    metro AS __value\r\nFROM (\r\n    SELECT metro_1 AS metro\r\n    FROM public.apartments_analysis\r\n\r\n    UNION\r\n\r\n    SELECT metro_2\r\n    FROM public.apartments_analysis\r\n\r\n    UNION\r\n\r\n    SELECT metro_3\r\n    FROM public.apartments_analysis\r\n) AS stations\r\nWHERE metro IS NOT NULL\r\n  AND BTRIM(metro) <> ''\r\nORDER BY 1;",
+              "rawQuery": true,
+              "rawSql": "SELECT DISTINCT\r\n    metro AS __text,\r\n    metro AS __value\r\nFROM (\r\n    SELECT metro_1 AS metro\r\n    FROM public.apartments_analysis\r\n\r\n    UNION\r\n\r\n    SELECT metro_2\r\n    FROM public.apartments_analysis\r\n\r\n    UNION\r\n\r\n    SELECT metro_3\r\n    FROM public.apartments_analysis\r\n) AS stations\r\nWHERE metro IS NOT NULL\r\n  AND BTRIM(metro) <> ''\r\nORDER BY 1;",
+              "refId": "SQLVariableQueryEditor-VariableQuery",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              }
+            },
+            "labels": {
+              "grafana.app/export-label": "grafana-postgresql-datasource-1",
+              "grafana.app/export-datasource-name": "grafana-postgresql-datasource"
+            }
+          },
+          "regex": "",
+          "regexApplyTo": "value",
+          "sort": "disabled",
+          "definition": "SELECT DISTINCT\r\n    metro AS __text,\r\n    metro AS __value\r\nFROM (\r\n    SELECT metro_1 AS metro\r\n    FROM public.apartments_analysis\r\n\r\n    UNION\r\n\r\n    SELECT metro_2\r\n    FROM public.apartments_analysis\r\n\r\n    UNION\r\n\r\n    SELECT metro_3\r\n    FROM public.apartments_analysis\r\n) AS stations\r\nWHERE metro IS NOT NULL\r\n  AND BTRIM(metro) <> ''\r\nORDER BY 1;",
+          "options": [],
+          "multi": true,
+          "includeAll": true,
+          "allValue": ".*",
+          "allowCustomValue": true
+        }
+      }
+    ],
+    "preferences": {
+      "layout": {
+        "kind": "GridLayout",
+        "spec": {
+          "items": []
+        }
+      }
+    }
+  }
+}
