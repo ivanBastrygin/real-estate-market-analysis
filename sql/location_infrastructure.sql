@@ -8,9 +8,8 @@
   Query variables: Multi-value + Include All; Custom all value: .*
 */
 
--- =========================================================
 -- VARIABLES
--- =========================================================
+
 
 -- Variable: city
 SELECT DISTINCT city AS __text, city AS __value
@@ -43,9 +42,9 @@ WHERE parking IS NOT NULL AND BTRIM(parking) <> ''
 ORDER BY 1;
 
 
--- =========================================================
+
 -- COMMON FILTER
--- =========================================================
+
 -- COALESCE(city, '') ~ '${city:regex}'
 -- AND COALESCE(district, '') ~ '${district:regex}'
 -- AND COALESCE(parking, '') ~ '${parking:regex}'
@@ -56,10 +55,10 @@ ORDER BY 1;
 -- )
 
 
--- =========================================================
+
 -- PANEL 1 — Listings by District
 -- Visualization: Bar chart
--- =========================================================
+
 SELECT district, COUNT(*) AS listings
 FROM public.apartments_analysis
 WHERE district IS NOT NULL
@@ -75,10 +74,9 @@ GROUP BY district
 ORDER BY listings DESC;
 
 
--- =========================================================
 -- PANEL 2 — Median Price by District
 -- Visualization: Bar chart; unit: RUB
--- =========================================================
+
 SELECT
     district,
     ROUND(PERCENTILE_CONT(0.5)
@@ -98,10 +96,9 @@ GROUP BY district
 ORDER BY median_price_rub DESC;
 
 
--- =========================================================
 -- PANEL 3 — Median Price per m² by District
 -- Visualization: Bar chart; unit: RUB/m²
--- =========================================================
+
 SELECT
     district,
     ROUND(PERCENTILE_CONT(0.5)
@@ -121,11 +118,11 @@ GROUP BY district
 ORDER BY median_price_per_sqm DESC;
 
 
--- =========================================================
+
 -- PANEL 4 — Average Time to Selected Metro
 -- Uses the closest selected station per listing, not all station entries.
 -- Visualization: Stat; unit: minutes
--- =========================================================
+
 WITH filtered AS (
     SELECT *
     FROM public.apartments_analysis
@@ -159,10 +156,9 @@ SELECT ROUND(AVG(access_time), 1) AS average_metro_time_min
 FROM nearest;
 
 
--- =========================================================
 -- PANEL 5 — Listings by Metro Access Time
 -- Visualization: Bar chart
--- =========================================================
+
 WITH filtered AS (
     SELECT *
     FROM public.apartments_analysis
@@ -206,10 +202,10 @@ GROUP BY 1
 ORDER BY MIN(access_time);
 
 
--- =========================================================
+
 -- PANEL 6 — Most Popular Metro Stations
 -- Visualization: Bar chart; top 15
--- =========================================================
+
 WITH filtered AS (
     SELECT *
     FROM public.apartments_analysis
@@ -234,11 +230,11 @@ ORDER BY listings DESC
 LIMIT 15;
 
 
--- =========================================================
+
 -- PANEL 7 — Passenger Lift Count
 -- Visualization: Pie chart
 -- passenger_lift is numeric in the supplied schema.
--- =========================================================
+
 SELECT
     CASE
         WHEN passenger_lift = 0 THEN '0'
@@ -261,10 +257,10 @@ GROUP BY 1
 ORDER BY MIN(passenger_lift);
 
 
--- =========================================================
+
 -- PANEL 8 — Parking Types
 -- Visualization: Pie chart; top 10
--- =========================================================
+
 SELECT parking, COUNT(*) AS listings
 FROM public.apartments_analysis
 WHERE parking IS NOT NULL
@@ -282,10 +278,10 @@ ORDER BY listings DESC
 LIMIT 10;
 
 
--- =========================================================
+
 -- PANEL 9 — Infrastructure Summary by District
 -- Visualization: Table
--- =========================================================
+
 SELECT
     district,
     COUNT(*) AS listings,
