@@ -25,16 +25,16 @@
 ```text
 .
 ├── assets/
-│   ├── market_overview.png              # добавить скриншот
-│   └── location_infrastructure.png      # добавить скриншот
+│   ├── market_overview.png            
+│   └── location_infrastructure.png     
 ├── data/
 │   ├── raw/
-│   │   └── avito_clean_final_full.xlsx  # добавить исходный Excel
+│   │   └── avito_clean_final_full.xlsx 
 │   └── processed/
-│       └── apartments_clean.csv         # результат очистки
+│       └── apartments_clean.csv         
 ├── results/
-│   ├── market_overview.json             # добавить экспорт Grafana
-│   └── location_infrastructure.json     # добавить экспорт Grafana
+│   ├── market_overview.json           
+│   └── location_infrastructure.json   
 ├── scripts/
 │   └── prepare_data.py
 ├── sql/
@@ -95,12 +95,3 @@ SQL-файлы содержат запросы переменных Grafana и �
 3. Импортируй очищенный CSV в PostgreSQL и создай представление `apartments_analysis`, которое используют дашборды.
 4. Выполни запросы переменных и панелей из соответствующего SQL-файла Grafana либо импортируй JSON-экспорты после добавления их в `results/`.
 5. Добавь скриншоты дашбордов в `assets/`.
-
-## Примечания и ограничения
-
-- Это учебный портфолио-проект, основанный на предоставленном наборе объявлений.
-- Метрики описывают записи в имеющемся датасете и не являются полной переписью рынка недвижимости.
-- Часть фильтров и SQL-запросов зависит от названий столбцов и вычисляемых полей в `public.apartments_analysis`. При изменении схемы проверь запросы.
-- JSON-экспорты дашбордов и скриншоты добавляются владельцем проекта отдельно.
-
----
