@@ -13,9 +13,9 @@
   Use the same PostgreSQL datasource as the dashboard.
 */
 
--- =========================================================
+
 -- VARIABLES
--- =========================================================
+
 
 -- Variable: district
 SELECT DISTINCT district AS __text, district AS __value
@@ -54,10 +54,10 @@ WHERE metro IS NOT NULL AND BTRIM(metro) <> ''
 ORDER BY 1;
 
 
--- =========================================================
+
 -- COMMON FILTER
 -- Paste this WHERE condition into each panel query.
--- =========================================================
+
 -- COALESCE(district, '') ~ '${district:regex}'
 -- AND COALESCE(rooms_group, '') ~ '${rooms:regex}'
 -- AND COALESCE(renovation, '') ~ '${renovation:regex}'
@@ -69,10 +69,9 @@ ORDER BY 1;
 -- )
 
 
--- =========================================================
 -- KPI 1 — Total Listings
 -- Visualization: Stat
--- =========================================================
+
 SELECT COUNT(*) AS total_listings
 FROM public.apartments_analysis
 WHERE COALESCE(district, '') ~ '${district:regex}'
@@ -86,10 +85,9 @@ WHERE COALESCE(district, '') ~ '${district:regex}'
   );
 
 
--- =========================================================
 -- KPI 2 — Median Price
 -- Visualization: Stat; unit: RUB
--- =========================================================
+
 SELECT ROUND(
     PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY price_rub)
 ) AS median_price_rub
@@ -106,10 +104,10 @@ WHERE price_rub > 0
   );
 
 
--- =========================================================
+
 -- KPI 3 — Average Price
 -- Visualization: Stat; unit: RUB
--- =========================================================
+
 SELECT ROUND(AVG(price_rub)) AS average_price_rub
 FROM public.apartments_analysis
 WHERE price_rub > 0
@@ -124,10 +122,10 @@ WHERE price_rub > 0
   );
 
 
--- =========================================================
+
 -- KPI 4 — Median Price per Square Meter
 -- Visualization: Stat; unit: RUB/m²
--- =========================================================
+
 SELECT ROUND(
     PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY price_per_sqm)
 ) AS median_price_per_sqm
@@ -144,10 +142,10 @@ WHERE price_per_sqm > 0
   );
 
 
--- =========================================================
+
 -- KPI 5 — Median Area
 -- Visualization: Stat; unit: m²
--- =========================================================
+
 SELECT ROUND(
     PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY total_area_sqm)::numeric,
     1
@@ -165,10 +163,10 @@ WHERE total_area_sqm > 0
   );
 
 
--- =========================================================
+
 -- CHART 1 — Listings by District, Top 10
 -- Visualization: Bar chart
--- =========================================================
+
 SELECT district, COUNT(*) AS listings
 FROM public.apartments_analysis
 WHERE district IS NOT NULL
@@ -186,10 +184,10 @@ ORDER BY listings DESC
 LIMIT 10;
 
 
--- =========================================================
+
 -- CHART 2 — Price Distribution by Price Segment
 -- Visualization: Bar chart
--- =========================================================
+
 SELECT price_segment, COUNT(*) AS listings
 FROM public.apartments_analysis
 WHERE price_segment IS NOT NULL
@@ -206,10 +204,10 @@ GROUP BY price_segment
 ORDER BY MIN(price_rub);
 
 
--- =========================================================
+
 -- CHART 3 — Median Price per m² by District, Top 10
 -- Visualization: Bar chart
--- =========================================================
+
 SELECT
     district,
     ROUND(PERCENTILE_CONT(0.5)
@@ -231,10 +229,9 @@ ORDER BY median_price_per_sqm DESC
 LIMIT 10;
 
 
--- =========================================================
 -- TABLE — District Summary
 -- Visualization: Table
--- =========================================================
+
 SELECT
     district,
     COUNT(*) AS listings,
